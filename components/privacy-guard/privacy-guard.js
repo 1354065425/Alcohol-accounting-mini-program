@@ -1,0 +1,18 @@
+Component({
+  data:{visible:false},
+  lifetimes:{
+    attached(){
+      if(wx.onNeedPrivacyAuthorization){
+        this.privacyListener=resolve=>{this.resolvePrivacy=resolve;this.setData({visible:true});};
+        wx.onNeedPrivacyAuthorization(this.privacyListener);
+      }
+    },
+    detached(){if(wx.offNeedPrivacyAuthorization&&this.privacyListener)wx.offNeedPrivacyAuthorization(this.privacyListener);}
+  },
+  methods:{
+    openContract(){wx.openPrivacyContract({fail:()=>wx.showToast({title:'请在小程序后台完善隐私保护指引',icon:'none'})});},
+    agree(){if(this.resolvePrivacy)this.resolvePrivacy({buttonId:'zjgPrivacyAgree',event:'agree'});this.resolvePrivacy=null;this.setData({visible:false});},
+    decline(){if(this.resolvePrivacy)this.resolvePrivacy({event:'disagree'});this.resolvePrivacy=null;this.setData({visible:false});},
+    noop(){}
+  }
+});

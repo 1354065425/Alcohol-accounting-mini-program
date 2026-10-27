@@ -1,0 +1,41 @@
+<view class="page entry-page">
+  <view class="heading"><text class="eyebrow">臻酒阁 · 每一笔都清楚</text><text class="title">{{editing ? '修改账目' : '记一笔'}}</text><text class="subtitle">{{editing ? '保存后会更正原流水及库存数量' : '售酒、进货和日常支出，一处记好'}}</text></view>
+  <view class="kind-switch">
+    <view class="{{kind === 'sale' ? 'active' : ''}}" data-kind="sale" bindtap="switchKind">售酒收入</view>
+    <view class="{{kind === 'purchase' ? 'active' : ''}}" data-kind="purchase" bindtap="switchKind">进货入库</view>
+    <view class="{{kind === 'expense' ? 'active' : ''}}" data-kind="expense" bindtap="switchKind">经营支出</view>
+  </view>
+  <view class="form card">
+    <view class="amount-block"><text class="field-label">{{kind === 'sale' ? '实收总金额' : '实付总金额'}}（元）</text><view class="amount-input"><text class="yen">¥</text><input type="digit" maxlength="12" placeholder="0.00" value="{{amount}}" bindinput="inputAmount"/></view></view>
+    <view wx:if="{{kind !== 'expense'}}">
+      <view class="field"><text class="field-label">酒品名称</text><view class="picker-value" bindtap="openProducts"><text class="{{productName ? '' : 'placeholder'}}">{{productName || '选择或添加酒品'}}</text><text class="chevron">›</text></view><text wx:if="{{selectedProduct}}" class="stock-caption">现有库存 {{available}} 瓶 · {{selectedProduct.bottle || '500ml'}}</text></view>
+      <view class="field two-fields"><view><text class="field-label">瓶数</text><view class="quantity-row"><view class="quantity-control" bindtap="decrease">−</view><input type="number" maxlength="8" value="{{quantity}}" bindinput="inputQuantity"/><view class="quantity-control plus" bindtap="increase">＋</view></view></view><view class="unit-field"><text class="field-label">单价（元 / 瓶）</text><input class="unit-input" type="digit" maxlength="12" placeholder="可输入单价" value="{{unitPrice}}" bindinput="inputUnitPrice"/></view></view>
+      <text class="price-note">{{priceSource === 'unit' ? '已按单价 × 瓶数计算总金额，可直接修改总金额。' : '按总金额记账，单价为参考均价。'}}</text>
+    </view>
+    <view class="field" wx:else><text class="field-label">支出分类</text><picker range="{{expenseCategories}}" value="{{expenseIndex}}" bindchange="selectExpense"><view class="picker-value">{{expenseCategories[expenseIndex]}}<text class="chevron">›</text></view></picker></view>
+    <view class="field"><text class="field-label">记账日期</text><picker mode="date" value="{{date}}" end="{{today}}" bindchange="selectDate"><view class="picker-value">{{date}}<text class="chevron">›</text></view></picker></view>
+    <view class="field"><text class="field-label">{{kind === 'sale' ? '收款方式' : '付款方式'}}</text><picker range="{{paymentMethods}}" value="{{paymentIndex}}" bindchange="selectPayment"><view class="picker-value">{{paymentMethods[paymentIndex]}}<text class="chevron">›</text></view></picker></view>
+    <view class="field"><text class="field-label">{{kind === 'sale' ? '客户（选填）' : '供应商 / 收款方（选填）'}}</text><input class="text-input" maxlength="60" placeholder="方便以后查找这笔流水" data-field="counterparty" value="{{counterparty}}" bindinput="inputField"/></view>
+    <view class="field"><text class="field-label">备注（选填）</text><textarea class="note-input" maxlength="300" auto-height value="{{note}}" placeholder="例如：整箱采购、熟客自提" data-field="note" bindinput="inputField"/></view>
+  </view>
+  <text wx:if="{{draftState}}" class="draft-state">{{draftState}}</text>
+  <view class="entry-actions">
+    <button class="btn-primary save" loading="{{saving}}" disabled="{{saving}}" bindtap="save">{{editing ? '保存修改' : '保存这笔'}}</button>
+    <button wx:if="{{!editing}}" class="secondary-button" disabled="{{saving}}" bindtap="saveAndContinue">保存后再记一笔</button>
+    <button wx:else class="delete-entry" disabled="{{saving}}" bindtap="deleteEntry">删除这笔账目</button>
+  </view>
+  <view class="form-hint">{{editing ? '历史流水更正后不追溯重算库存均价，可在酒品管理中修改库存成本。' : '只记录已收付的款项，不包含赊账或待收款。'}}</view>
+  <view wx:if="{{productSheet}}" class="sheet-mask" bindtap="closeProducts" catchtouchmove="noop">
+    <view class="product-sheet" catchtap="noop">
+      <view class="sheet-heading"><text class="section-title">选择酒品</text><text class="link close-sheet" bindtap="closeProducts">关闭</text></view>
+      <input class="search-input" placeholder="搜索酒名或品牌" value="{{productSearch}}" bindinput="searchProducts" maxlength="60"/>
+      <view class="product-filters"><text class="{{productFilter === 'all' ? 'selected' : ''}}" data-filter="all" bindtap="changeProductFilter">全部酒名</text><text class="{{productFilter === 'stock' ? 'selected' : ''}}" data-filter="stock" bindtap="changeProductFilter">有库存</text><text class="option-count">{{productCount}} 款</text></view>
+      <scroll-view scroll-y class="product-options">
+        <view wx:for="{{productOptions}}" wx:key="name" class="product-option" data-name="{{item.name}}" bindtap="chooseProduct"><view class="name-icon">{{item.shortName}}</view><view class="option-info"><text class="option-name">{{item.name}}</text><text class="option-detail">{{item.count > 0 ? '库存 ' + item.count + ' 瓶' : '暂无库存，可先记进货'}}</text></view><text class="option-check">{{productName === item.name ? '✓' : '›'}}</text></view>
+        <view wx:if="{{!productOptions.length}}" class="empty">没有找到，可在下方添加这个酒名</view>
+        <view wx:if="{{productCount > 100}}" class="option-note">已显示前100款，输入酒名可快速找到</view>
+      </scroll-view>
+      <view class="product-add"><input placeholder="输入新酒名，添加后会记住" maxlength="60" value="{{newProductName}}" bindinput="inputProductName" confirm-type="done" bindconfirm="addProduct"/><button bindtap="addProduct">添加</button></view>
+    </view>
+  </view>
+</view>

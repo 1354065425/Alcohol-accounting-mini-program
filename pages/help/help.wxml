@@ -1,0 +1,12 @@
+<view class="page help-page">
+  <text class="eyebrow">臻酒阁 · 使用指南</text><text class="title">把酒与账，都管清楚</text>
+  <view class="help-card card"><text class="help-title">第一次使用</text><text>新账本从零开始。可先在酒库存的“管理酒品”中录入期初数量和每瓶成本，或直接记一笔进货入库。售酒时会自动扣减库存。</text></view>
+  <view class="help-card card"><text class="help-title">记账与改错</text><text>售酒、进货、经营支出分开记录。支持单价×瓶数自动计算，也能直接填写实际总金额。点击流水可修改或删除，库存按数量差额同步调整。录入错的酒名，可在酒品管理中更正。</text></view>
+  <view class="help-card card"><text class="help-title">查询以前的流水</text><text>账本中点击“查看全部”，可按单日、日期区间、收支类型和关键词筛选。客户、供应商、备注也可以搜索。报表中选择月份查看经营收支。</text></view>
+  <view class="help-card card"><text class="help-title">库存与成本</text><text>库存页默认只显示有库存的酒品。“管理酒品”可查看零库存、编辑规格、建议售价和预警值。盘点时更正数量或成本要填写原因，并留下调整记录。</text><text>进货会更新当前库存均价。修改或删除历史流水只同步数量，不追溯重算后续成本；如需更正库存单价，请在酒品管理中调整。</text></view>
+  <view class="help-card card"><text class="help-title">收支结余不是利润</text><text>本工具按实际收付款记录。进货支出和经营费用均计入支出，因此现金结余不能直接作为毛利或净利润。不记录欠款、税务凭证或未收付订单。</text></view>
+  <view class="help-card card"><text class="help-title">数据保存在什么地方</text><text>账目、酒品、设置和草稿保存在当前设备的微信本地存储中。本版本没有云端账号或自动跨设备同步。程序不会主动上传你的账本，也不使用广告或行为分析服务。</text><text>不同手机或微信账号的数据互不共享。清理微信数据、换机或移除相关数据可能导致账本丢失，操作前请导出完整备份。</text></view>
+  <view class="help-card card"><text class="help-title">备份与恢复</text><text>在“数据与设置”点击“导出完整备份”，文件生成后，再点击“发送备份文件”并选择微信会话保存。发送不成功时可重试或改用TXT备份，内容与JSON相同。CSV用于表格查账，不能恢复。备份文件包含客户、供应商和备注等内容，请妥善保管。</text><text>恢复时选择保存的JSON或TXT文件，或粘贴完整备份文本。每次修改数据前保留最近5个本地恢复点。它们也存于本机，不能代替外部备份。</text></view>
+  <view class="help-card card"><text class="help-title">文件与隐私</text><text>从文件恢复时，只读取你主动选择的备份文件以恢复本机账本。导出或复制备份由你主动发起；分享后的文件由你自行管理。客户名称、供应商及备注均为可选填写，不读取通讯录、位置或手机号。</text><text>小程序平台自身的数据处理和权限管理，请以微信提供的隐私说明为准。</text></view>
+  <button class="btn-primary" bindtap="goSettings">前往数据与设置</button>
+</view>

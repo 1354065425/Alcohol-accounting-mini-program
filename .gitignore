@@ -1,0 +1,4 @@
+project.private.config.json
+release/
+node_modules/
+*.log

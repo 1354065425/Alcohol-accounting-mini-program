@@ -1,0 +1,1 @@
+Page({goSettings(){wx.navigateTo({url:"/pages/settings/settings"});}});

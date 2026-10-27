@@ -1,0 +1,34 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/stock/stock",
+    "pages/report/report",
+    "pages/entry/entry",
+    "pages/ledger/ledger",
+    "pages/settings/settings",
+    "pages/help/help",
+    "pages/movements/movements"
+  ],
+  "window": {
+    "navigationBarTitleText": "臻酒阁",
+    "navigationBarBackgroundColor": "#f6f4ef",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f4ef",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#938d83",
+    "selectedColor": "#9c4434",
+    "backgroundColor": "#fffdfa",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "账本" },
+      { "pagePath": "pages/stock/stock", "text": "酒库存" },
+      { "pagePath": "pages/report/report", "text": "报表" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
+

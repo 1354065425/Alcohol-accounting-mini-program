@@ -1,0 +1,14 @@
+<view class="page">
+  <view wx:if="{{error}}" class="card error-box"><text>{{error}}</text><button bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <view class="product-heading card" wx:if="{{product}}"><view class="name-icon">{{product.shortName}}</view><view class="product-info"><text class="eyebrow">臻酒阁 · 库存变动</text><text class="product-name">{{product.name}}</text><text class="product-stock">当前 {{product.count}} 瓶 · 单瓶成本 ¥{{product.costLabel}}</text></view></view>
+    <view class="filter-row"><view wx:for="{{filters}}" wx:key="key" class="filter-chip {{filter === item.key ? 'active' : ''}}" data-filter="{{item.key}}" bindtap="selectFilter">{{item.label}}</view></view>
+    <view class="section-head"><text class="section-title">变动明细</text><text class="muted">共 {{filteredCount}} 条</text></view>
+    <view class="movement-list card">
+      <view class="movement-row" wx:for="{{rows}}" wx:key="id" data-id="{{item.entryId}}" bindtap="openEntry"><view class="movement-top"><text class="movement-label">{{item.label}}</text><text class="movement-delta {{item.kind}}">{{item.deltaLabel}}</text></view><text class="movement-date">{{item.date}}{{item.isAdjustment ? ' · 盘点记录' : ' · 点此查看账目'}}</text><text class="movement-note">{{item.note}}</text><text class="movement-detail">{{item.amountLabel}}</text><text class="movement-detail" wx:if="{{item.costLabel}}">{{item.costLabel}}</text></view>
+      <view class="empty" wx:if="{{filteredCount === 0}}">{{filter === 'all' ? '还没有这款酒的变动记录' : '没有符合条件的变动记录'}}</view>
+    </view>
+    <view class="movement-pagination" wx:if="{{filteredCount > 0}}"><button size="mini" bindtap="previousPage" disabled="{{!hasPrevious}}">上一页</button><view><text>第 {{pageNumber}} / {{pageCount}} 页</text><text class="page-size">每页 {{pageSize}} 条</text></view><button size="mini" bindtap="nextPage" disabled="{{!hasNext}}">下一页</button></view>
+    <text class="history-note">进货与售酒显示当前有效账目，修改账目后会同步更新；手工盘点单独留存记录。</text>
+  </block>
+</view>

@@ -1,0 +1,50 @@
+<view class="page">
+  <view class="settings-heading"><view class="brand-mark">臻</view><view><text class="eyebrow">臻酒阁 · 安心记好每一笔</text><text class="title">数据与设置</text></view></view>
+  <view wx:if="{{error}}" class="error-banner">{{error}}</view>
+  <view class="storage-notice card"><text class="notice-title">账本保存在这部手机的微信中</text><text>没有云同步。换手机或清理微信数据前，请先导出完整备份，恢复时选择保存的JSON或TXT文件。</text><view class="storage-meta"><text>{{entryCount}} 笔账目 · {{productCount}} 款酒品</text><text>最近文件备份：{{lastExport}}</text></view></view>
+  <view class="section-head"><text class="section-title">账本设置</text></view>
+  <view class="settings-card card">
+    <view class="setting-field"><text>店铺名称</text><input maxlength="40" data-field="shopName" value="{{shopName}}" bindinput="inputSetting" placeholder="臻酒阁"/></view>
+    <view class="setting-field"><text>默认低库存提醒（瓶）</text><input type="number" maxlength="6" data-field="threshold" value="{{threshold}}" bindinput="inputSetting"/></view>
+    <view class="setting-field"><text>默认收付款方式</text><picker range="{{paymentMethods}}" value="{{paymentIndex}}" bindchange="changePayment"><view class="setting-picker">{{paymentMethods[paymentIndex]}}　›</view></picker></view>
+    <button class="btn-primary setting-save" bindtap="saveSettings">保存设置</button>
+  </view>
+  <view class="section-head"><text class="section-title">备份与导出</text></view>
+  <view class="menu-card card">
+    <view class="menu-row" bindtap="exportBackup"><view><text class="menu-title">导出完整备份</text><text class="menu-detail">先生成文件，再发送保存；支持JSON与TXT</text></view><text class="menu-arrow">›</text></view>
+    <view class="menu-row" bindtap="exportCsv"><view><text class="menu-title">导出流水表格</text><text class="menu-detail">CSV可用Excel打开，不可用于恢复</text></view><text class="menu-arrow">›</text></view>
+    <view class="menu-row" bindtap="textBackup"><view><text class="menu-title">文本备份</text><text class="menu-detail">复制完整备份内容，自行妥善保存</text></view><text class="menu-arrow">›</text></view>
+  </view>
+  <view class="section-head"><text class="section-title">恢复数据</text></view>
+  <view class="menu-card card">
+    <view class="menu-row" bindtap="importFile"><view><text class="menu-title">从备份文件恢复</text><text class="menu-detail">从微信聊天中选择自己保存的JSON或TXT备份</text></view><text class="menu-arrow">›</text></view>
+    <view class="menu-row" bindtap="openTextImport"><view><text class="menu-title">粘贴备份内容恢复</text><text class="menu-detail">粘贴之前导出的完整JSON文本</text></view><text class="menu-arrow">›</text></view>
+  </view>
+  <view class="section-head"><text class="section-title">最近恢复点</text><text class="muted small">最多保留5份</text></view>
+  <text class="section-note">修改账本前自动保留。恢复点也存于本机，不能代替外部备份。</text>
+  <view class="menu-card card"><view wx:for="{{snapshots}}" wx:key="id" class="menu-row" data-id="{{item.id}}" bindtap="restorePoint"><view><text class="menu-title">{{item.time}}</text><text class="menu-detail">{{item.reason}} · {{item.entries}} 笔账目</text></view><text class="link">恢复</text></view><view wx:if="{{!snapshots.length}}" class="empty">开始记账后会自动创建恢复点</view></view>
+  <view class="section-head"><text class="section-title">使用与管理</text></view>
+  <view class="menu-card card"><view class="menu-row" bindtap="openHelp"><view><text class="menu-title">使用帮助与数据说明</text><text class="menu-detail">记账、库存、备份及隐私说明</text></view><text class="menu-arrow">›</text></view><view class="menu-row" bindtap="clearData"><view><text class="menu-title danger">清理以前的数据</text><text class="menu-detail">可清空账目或同时将库存清零</text></view><text class="menu-arrow">›</text></view></view>
+  <view class="version-note">臻酒阁 · {{version}}<text>单人本地账本</text></view>
+  <view wx:if="{{busy}}" class="busy-banner">正在处理，请稍候…</view>
+  <view wx:if="{{exportSheet}}" class="dialog-mask" catchtouchmove="noop">
+    <view class="export-dialog card">
+      <view class="dialog-heading"><text class="section-title">{{exportKind === 'backup' ? '完整备份文件' : '流水表格文件'}}</text><text class="link" bindtap="closeExport">关闭</text></view>
+      <view class="export-file"><text class="export-format">{{exportFormat}}</text><text class="export-name" selectable>{{exportFileName}}</text></view>
+      <text class="dialog-copy">{{exportKind === 'backup' ? '文件包含账目、酒品、库存及设置。请点击下方按钮，选择微信会话发送并保存。' : 'CSV可用Excel打开，仅供查账，不可用于恢复。请发送到自己信任的位置。'}}</text>
+      <text class="export-status">{{exportStatus}}</text>
+      <view wx:if="{{exportError}}" class="export-error"><text>{{exportError}}</text><text wx:if="{{exportKind === 'backup'}}">可重试发送，或改用TXT兼容备份。</text><view wx:if="{{exportRawError}}"><text class="error-details-link" bindtap="toggleExportDetails">{{exportDetails ? '收起错误详情' : '查看错误详情'}}</text><view wx:if="{{exportDetails}}"><scroll-view scroll-y class="export-error-detail"><text selectable>{{exportRawError}}</text></scroll-view><text class="error-details-link" bindtap="copyExportError">复制错误详情</text></view></view></view>
+      <button class="btn-primary" bindtap="sendExportFile" loading="{{sharing}}" disabled="{{busy || sharing}}">{{exportShared ? '再次发送文件' : (exportKind === 'backup' ? '发送备份文件' : '发送表格文件')}}</button>
+      <view class="export-alternatives"><button wx:if="{{exportKind === 'backup'}}" bindtap="switchExportFormat" disabled="{{busy || sharing}}">{{exportFormat === 'TXT' ? '改回JSON备份' : '改用TXT备份'}}</button><button bindtap="copyExportText" disabled="{{busy || sharing}}">{{exportKind === 'backup' ? '复制备份文本' : '复制表格内容'}}</button></view>
+      <text class="export-footnote">文件生成成功不等于已保存到外部，请完成发送并妥善保管。</text>
+    </view>
+  </view>
+  <view wx:if="{{textMode}}" class="dialog-mask" catchtouchmove="noop">
+    <view class="text-dialog card">
+      <view class="dialog-heading"><text class="section-title">{{textMode === 'export' ? '文本备份' : '粘贴备份恢复'}}</text><text class="link" bindtap="closeText">关闭</text></view>
+      <view wx:if="{{textMode === 'export'}}"><text class="dialog-copy">下方为内容预览，点击复制会复制完整备份。请保存到自己信任的位置。</text><scroll-view scroll-y class="backup-preview"><text selectable>{{backupPreview}}</text></scroll-view><button class="btn-primary" bindtap="copyBackup">复制完整备份</button></view>
+      <view wx:else><text class="dialog-copy">请粘贴臻酒阁导出的完整JSON内容，不会读取剪贴板。</text><textarea class="import-input" maxlength="950000" placeholder="在此长按粘贴备份内容" bindinput="inputImport"/><text class="input-length">已输入 {{importLength}} 字符</text><button class="btn-primary" bindtap="importTextBackup">校验并恢复</button></view>
+    </view>
+  </view>
+  <privacy-guard/>
+</view>

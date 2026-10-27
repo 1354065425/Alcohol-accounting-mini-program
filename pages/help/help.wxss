@@ -1,0 +1,2 @@
+.help-card{margin:24rpx 0;padding:28rpx;font-size:25rpx;line-height:1.9;color:#817568}.help-title{display:block;color:#392b24;font-size:29rpx;font-weight:600;margin-bottom:14rpx}.help-card>text:not(.help-title){display:block;margin-top:14rpx}.help-page>button{margin-top:28rpx}
+.help-page>button { display:flex;align-items:center;justify-content:center;height:88rpx;min-height:88rpx;padding:0 24rpx;font-size:26rpx;line-height:1.2;text-align:center; }

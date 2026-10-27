@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="topline"><view><text class="eyebrow">臻酒阁 · 酒与账，皆有数</text><text class="title">{{shopName}}</text></view><view class="settings-entry" bindtap="openSettings"><text class="avatar">臻</text><text class="settings-caption">设置</text></view></view>
+  <view wx:if="{{error}}" class="error-card card"><text>{{error}}</text><button class="btn-primary" bindtap="openSettings">前往数据恢复</button></view>
+  <view class="hero card">
+    <view class="hero-top"><text class="hero-label">本月现金结余</text><text class="hero-date">{{monthLabel}}</text></view>
+    <view class="balance"><text class="currency">¥</text><text class="balance-number">{{balance}}</text></view>
+    <view class="hero-rule"></view>
+    <view class="hero-foot"><view><text class="stat-label">售酒收入</text><text class="stat-value">¥{{income}}</text></view><view class="hero-divider"></view><view><text class="stat-label">进货及经营支出</text><text class="stat-value">¥{{expense}}</text></view><view class="hero-mark">酿</view></view>
+    <text class="cash-note">按实际收付款统计，现金结余不等同于利润。</text>
+  </view>
+  <view class="quick-row">
+    <view class="quick card" bindtap="addSale"><view class="quick-icon sale">收</view><text class="quick-name">售酒收入</text><text class="quick-hint">自动出库</text></view>
+    <view class="quick card" bindtap="addPurchase"><view class="quick-icon buy">进</view><text class="quick-name">进货入库</text><text class="quick-hint">自动入库</text></view>
+    <view class="quick card" bindtap="addExpense"><view class="quick-icon expense">支</view><text class="quick-name">经营支出</text><text class="quick-hint">日常费用</text></view>
+  </view>
+  <view class="today-card card" bindtap="openToday"><view class="today-top"><text class="section-title">今日经营</text><text class="link">{{todayCount}} 笔流水　›</text></view><view class="today-totals"><view><text class="muted">今日收入</text><text class="today-income">¥{{todayIncome}}</text></view><view><text class="muted">今日支出</text><text>¥{{todayExpense}}</text></view><view><text class="muted">在库酒品</text><text>{{stockBottles}} 瓶</text></view></view></view>
+  <view wx:if="{{lowStockCount > 0}}" class="low-notice" bindtap="openStock"><text>{{lowStockCount}} 款酒品库存偏低，记得安排补货</text><text>查看　›</text></view>
+  <view wx:if="{{backupReminder}}" class="backup-notice" bindtap="openSettings"><text>账本已保存在本机，记得导出一份备份。</text><text>去备份　›</text></view>
+  <view wx:if="{{empty}}" class="welcome-card card"><text class="section-title">从第一瓶酒开始</text><text class="welcome-copy">先记一笔进货，或在酒品管理中录入期初库存，再开始售酒记账。</text><view class="welcome-actions"><text class="link" bindtap="addPurchase">记一笔进货　›</text><text class="link" bindtap="openStock">管理酒品　›</text></view></view>
+  <view class="section-head"><text class="section-title">最近流水</text><text class="link" bindtap="openAll">查流水　›</text></view>
+  <view class="ledger card">
+    <view class="entry" wx:for="{{entries}}" wx:key="id" data-id="{{item.id}}" bindtap="editEntry"><view class="entry-icon {{item.type}}">{{item.type === 'income' ? '收' : item.quantity > 0 ? '进' : '支'}}</view><view class="entry-main"><text class="entry-name">{{item.name}}</text><text class="entry-meta">{{item.date}} · {{item.category}}</text></view><view class="entry-amount"><text class="amount {{item.type}}">{{item.type === 'income' ? '+' : '−'}}¥{{item.amount}}</text><text class="entry-qty">{{item.quantity > 0 ? item.quantity + ' 瓶' : item.paymentMethod || '经营费用'}}</text></view></view>
+    <view class="empty" wx:if="{{!entries.length}}">记下第一笔流水，经营就从这里开始。</view>
+  </view>
+  <view class="footer-note">好酒有数，日子有账</view>
+</view>

@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="heading"><text class="eyebrow">臻酒阁 · 每一笔都有据可查</text><text class="title">流水明细</text></view>
+  <view class="filter-card card">
+    <view class="search-box"><text class="search-symbol">查</text><input placeholder="酒名、备注、客户或供应商" value="{{keyword}}" bindinput="inputKeyword" bindconfirm="searchNow" confirm-type="search"/><text wx:if="{{keyword}}" class="search-clear" bindtap="clearKeyword">清除</text></view>
+    <view class="quick-dates"><view class="{{activePeriod === 'today' ? 'active' : ''}}" bindtap="showToday">今天</view><view class="{{activePeriod === 'month' ? 'active' : ''}}" bindtap="showMonth">本月</view><view class="{{activePeriod === 'all' ? 'active' : ''}}" bindtap="showAll">全部日期</view><picker mode="date" value="{{startDate || today}}" end="{{today}}" bindchange="selectDate"><view class="{{activePeriod === 'day' ? 'active' : ''}}">指定一天</view></picker></view>
+    <view class="date-range"><picker mode="date" value="{{startDate || today}}" end="{{today}}" bindchange="selectStart"><view>{{startDate || '开始日期'}}<text>⌄</text></view></picker><text class="range-separator">至</text><picker mode="date" value="{{endDate || today}}" end="{{today}}" bindchange="selectEnd"><view>{{endDate || '结束日期'}}<text>⌄</text></view></picker></view>
+    <view class="type-tabs"><view data-type="all" class="{{type === 'all' ? 'active' : ''}}" bindtap="changeType">全部收支</view><view data-type="income" class="{{type === 'income' ? 'active' : ''}}" bindtap="changeType">收入</view><view data-type="expense" class="{{type === 'expense' ? 'active' : ''}}" bindtap="changeType">支出</view></view>
+  </view>
+  <view class="filter-summary card"><view><text>收入</text><text class="income">¥{{income}}</text></view><view><text>支出</text><text class="expense">¥{{expense}}</text></view><view><text>净收支</text><text class="{{balanceNegative ? 'expense' : 'income'}}">{{balanceNegative ? '−' : ''}}¥{{balance}}</text></view></view>
+  <view wx:if="{{errorMessage}}" class="error-card card"><text>{{errorMessage}}</text><button bindtap="refresh">重新读取</button></view>
+  <view wx:else>
+    <view class="result-head"><text>{{rangeLabel}}</text><text>{{filteredCount}} 笔</text></view>
+    <view class="day-group" wx:for="{{groups}}" wx:key="date" wx:for-item="group">
+      <view class="day-title"><text>{{group.date}}</text><text>点击记录可修改</text></view>
+      <view class="ledger card">
+        <view class="entry" wx:for="{{group.entries}}" wx:key="id" data-id="{{item.id}}" bindtap="editEntry">
+          <view class="entry-icon {{item.type}}">{{item.type === 'income' ? '收' : '支'}}</view>
+          <view class="entry-main"><text class="entry-name">{{item.name}}</text><text class="entry-meta">{{item.category}}{{item.quantity > 0 ? ' · ' + item.quantity + '瓶' : ''}}</text><text class="entry-detail" wx:if="{{item.detail}}">{{item.detail}}</text></view>
+          <view class="entry-right"><text class="amount {{item.type}}">{{item.type === 'income' ? '+' : '−'}}¥{{item.displayAmount}}</text><text class="entry-chevron">›</text></view>
+        </view>
+      </view>
+    </view>
+    <view class="empty-card card" wx:if="{{filteredCount === 0}}"><text class="empty-symbol">账</text><text class="empty-title">没有找到流水</text><text class="empty-copy">试试调整日期、收支类型或搜索词</text><view class="empty-actions"><button bindtap="resetFilters">重置筛选</button><button class="btn-primary" bindtap="addEntry">记一笔</button></view></view>
+    <view wx:if="{{filteredCount > 0}}" class="pagination card"><view class="page-caption"><text>第 {{rangeStart}}–{{rangeEnd}} 笔 / 共 {{filteredCount}} 笔</text><text>每页最多100笔</text></view><view class="page-controls"><button disabled="{{!hasPrevious}}" bindtap="previousPage">上一页</button><text>{{pageIndex}} / {{pageCount}}</text><button disabled="{{!hasNext}}" bindtap="nextPage">下一页</button></view></view>
+  </view>
+</view>

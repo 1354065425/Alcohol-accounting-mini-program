@@ -1,0 +1,71 @@
+{
+  "description": "酒类经营与酒窖记账小程序",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "libVersion": "3.6.5",
+  "appid": "wxeaa0813b5a695bb0",
+  "projectname": "臻酒阁",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "folder",
+        "value": "release"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      },
+      {
+        "type": "file",
+        "value": "RELEASE.md"
+      },
+      {
+        "type": "file",
+        "value": "TESTING.md"
+      },
+      {
+        "type": "file",
+        "value": "project.private.config.json"
+      },
+      {
+        "type": "file",
+        "value": ".gitignore"
+      }
+    ],
+    "include": []
+  },
+  "editorSetting": {}
+}
